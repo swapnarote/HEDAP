@@ -94,6 +94,11 @@ global class TDTM_Global_API {
     *********************************************************************************************************/
     global class TdtmToken {
         /********************************************************************************************************
+        * @description Id if this came from the database. THis field should NOT be used when comparing tokens to each other
+        *********************************************************************************************************/
+        global String handlerId { get; set; }
+
+        /********************************************************************************************************
         * @description The name of the class containing the code to run.
         *********************************************************************************************************/
         global String className    { get; set; }
@@ -144,6 +149,12 @@ global class TDTM_Global_API {
         global Boolean userManaged { get; set; }
         
         /********************************************************************************************************
+        * @description States which Package or Org is responsible for managing.
+        * 
+        *********************************************************************************************************/
+        global String ownedByNamespace { get; set; }
+
+        /********************************************************************************************************
         * @description Constructor. Simpler version. It assumes default values for those properties not passed as
         * parameters.
         * @parameter className The token's class name.
@@ -173,8 +184,7 @@ global class TDTM_Global_API {
         * @parameter filterValue The token's filter value.
         * @parameter userManaged The token's user-managed flag.
         *********************************************************************************************************/
-        global TdtmToken(String className, String targetObject, String actions, Integer loadOrder, Boolean active,
-        Boolean async, String filterField, String filterValue, Boolean userManaged) {
+        global TdtmToken(String className, String targetObject, String actions, Integer loadOrder, Boolean active, Boolean async, String filterField, String filterValue, Boolean userManaged) {
             this.className = className;
             this.targetObject = targetObject;
             this.actions = actions;
@@ -184,6 +194,77 @@ global class TDTM_Global_API {
             this.filterField = filterField;
             this.filterValue = filterValue;
             this.userManaged = userManaged;
+        }
+
+        // without namespace
+        global TdtmToken( String className,  String targetObject,  String actions,  Integer loadOrder,  Boolean active,  Boolean async,  Boolean userManaged, String ownedByNamespace ) {
+            this.className = className;
+            this.targetObject = targetObject;
+            this.actions = actions;
+            this.active = active;
+            this.loadOrder = loadOrder;
+            this.async = async;
+            this.filterField = filterField;
+            this.filterValue = filterValue;
+            this.userManaged = userManaged;
+            this.ownedByNamespace = ownedByNamespace;
+        }
+
+        // Returns a matching token from a set based on Class and target object
+        public TDTM_Global_API.TdtmToken getMatch(Set<TDTM_Global_API.TdtmToken> tokenSet) {
+
+            // Return matching
+            for(TDTM_Global_API.TdtmToken t : tokenSet) {
+                if(t.className == this.className  && t.targetObject== this.targetObject){
+                    return t;
+                }
+            }
+            return null;
+        }
+
+        // Leaving out user Managed Field from HashCode, we dont want it in the comparison if the field has been updated.
+        public Boolean equals(Object o) {           
+            // Support API versions 31 and lower with null check
+            if ( (o == null) || !(o instanceof TdtmToken) ) {
+               return false;
+            }
+
+            TdtmToken t = (TdtmToken)o;
+
+            // Compare all fields
+            if (
+                this.className == t.className 
+                && this.targetObject == t.targetObject 
+                && this.actions == t.actions 
+                && this.active == t.active 
+                && this.loadOrder == t.loadOrder 
+                && this.async == t.async 
+                && this.filterField == t.filterField 
+                && this.filterValue == t.filterValue 
+                //&& this.userManaged == t.userManaged
+            ) {
+                return true;
+            }
+
+            return false;            
+        }
+
+        // Leaving out user Managed Field from HashCode, we dont want it in the comparison if the field has been updated.
+        public Integer hashCode() {
+
+            return (
+                31 
+                * className.hashCode() 
+                * targetObject.hashCode() 
+                * actions.hashCode() 
+                * System.hashCode(active) 
+                * loadOrder  
+                // Deal with possible null values for arithmatic
+                * ( (filterField!=null)?filterField.hashCode() : 1 )  
+                // Deal with possible null values for arithmatic
+                * ( (filterValue!=null)?filterValue.hashCode() : 1 )  
+                //* System.hashCode(userManaged)
+            ) ^ actions.hashCode();
         }
     }
 }

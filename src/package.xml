@@ -59,6 +59,7 @@
         <members>ERR_Handler</members>
         <members>ERR_Handler_TEST</members>
         <members>ERR_Notifier</members>
+        <members>NOMERGE_Trigger_Handler_Management</members>
         <members>PREN_Affiliation_TDTM</members>
         <members>PREN_Affiliation_TEST</members>
         <members>REL_Relationships_Cm_TDTM</members>
@@ -326,6 +327,7 @@
         <members>Trigger_Handler__c.Filter_Value__c</members>
         <members>Trigger_Handler__c.Load_Order__c</members>
         <members>Trigger_Handler__c.Object__c</members>
+        <members>Trigger_Handler__c.Owned_by_Namespace__c</members>
         <members>Trigger_Handler__c.Trigger_Action__c</members>
         <members>Trigger_Handler__c.User_Managed__c</members>
         <name>CustomField</name>
