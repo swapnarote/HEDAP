@@ -138,6 +138,17 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Owned_by_Namespace__c</fullName>
+        <description>Enter the namespace of the package or Org that will control this Trigger handler.</description>
+        <externalId>false</externalId>
+        <label>Owned by Namespace</label>
+        <length>15</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Trigger_Action__c</fullName>
         <description>Trigger Action in which this module should fire</description>
         <externalId>false</externalId>
